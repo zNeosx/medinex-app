@@ -15,6 +15,13 @@
       "when": 1751788483317,
       "tag": "0001_moaning_vivisector",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1751802481683,
+      "tag": "0002_cool_pretty_boy",
+      "breakpoints": true
     }
   ]
 }

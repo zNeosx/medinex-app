@@ -1,4 +1,11 @@
-import { boolean, pgTable, text, timestamp } from "drizzle-orm/pg-core";
+import { relations } from "drizzle-orm";
+import {
+  boolean,
+  pgTable,
+  primaryKey,
+  text,
+  timestamp,
+} from "drizzle-orm/pg-core";
 import { createSelectSchema } from "drizzle-zod";
 
 export const user = pgTable("user", {
@@ -70,4 +77,53 @@ export const specialty = pgTable("specialty", {
     .notNull(),
 });
 
+export const specialitiesRelations = relations(specialty, ({ many }) => ({
+  practitionerSpecialties: many(practitionerSpecialties),
+}));
+
 export const specialitySelectSchema = createSelectSchema(specialty);
+
+export const practitioner = pgTable("practitioner", {
+  id: text("id").primaryKey(),
+  userId: text("user_id")
+    .notNull()
+    .unique()
+    .references(() => user.id, { onDelete: "cascade" }),
+  firstName: text("first_name").notNull(),
+  lastName: text("last_name").notNull(),
+  phone: text("phone").notNull(),
+  medicalLicenseNumber: text("medical_license_number").notNull(),
+  image: text("image"),
+});
+
+export const practitionerRelations = relations(practitioner, ({ many }) => ({
+  practitionerSpecialties: many(practitionerSpecialties),
+}));
+
+// PractitionerSpecialties join table (for many-to-many relation)
+export const practitionerSpecialties = pgTable(
+  "practitioner_specialties",
+  {
+    practitionerId: text("practitioner_id")
+      .notNull()
+      .references(() => practitioner.id, { onDelete: "cascade" }),
+    specialtyId: text("specialty_id")
+      .notNull()
+      .references(() => specialty.id, { onDelete: "cascade" }),
+  },
+  (t) => [primaryKey({ columns: [t.practitionerId, t.specialtyId] })],
+);
+
+export const practitionerSpecialtiesRelations = relations(
+  practitionerSpecialties,
+  ({ one }) => ({
+    practitioner: one(practitioner, {
+      fields: [practitionerSpecialties.practitionerId],
+      references: [practitioner.id],
+    }),
+    specialty: one(specialty, {
+      fields: [practitionerSpecialties.specialtyId],
+      references: [specialty.id],
+    }),
+  }),
+);
