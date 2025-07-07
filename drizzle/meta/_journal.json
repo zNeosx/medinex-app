@@ -22,6 +22,20 @@
       "when": 1751802481683,
       "tag": "0002_cool_pretty_boy",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1751883412096,
+      "tag": "0003_abandoned_old_lace",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1751883576404,
+      "tag": "0004_equal_frog_thor",
+      "breakpoints": true
     }
   ]
 }

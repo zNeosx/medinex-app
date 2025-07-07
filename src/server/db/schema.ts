@@ -1,12 +1,19 @@
 import { relations } from "drizzle-orm";
 import {
   boolean,
+  pgEnum,
   pgTable,
   primaryKey,
   text,
   timestamp,
 } from "drizzle-orm/pg-core";
 import { createSelectSchema } from "drizzle-zod";
+
+export const userRoleEnum = pgEnum("user_role_enum", [
+  "ADMIN",
+  "PRACTITIONER",
+  "PATIENT",
+]);
 
 export const user = pgTable("user", {
   id: text("id").primaryKey(),
@@ -16,6 +23,7 @@ export const user = pgTable("user", {
     .$defaultFn(() => false)
     .notNull(),
   image: text("image"),
+  role: userRoleEnum().notNull(),
   createdAt: timestamp("created_at")
     .$defaultFn(() => /* @__PURE__ */ new Date())
     .notNull(),
