@@ -2,7 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
+import type { z } from "zod";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -31,22 +31,21 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { specialitiesOptions } from "@/lib/react-query/options/speciality.option";
+import { useRegisterPractitioner } from "@/server/features/auth/register-practitioner";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { Stethoscope } from "lucide-react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 const PractitionerRegisterForm = () => {
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+  const router = useRouter();
+
   const formSchema = practitionerRegisterSchema;
 
   const { data: specialities } = useSuspenseQuery(specialitiesOptions);
 
-  // const { openModal } = useModalStore();
-  // const mutation = useMutation({
-  //   mutationFn: async (values: z.infer<typeof formSchema>) => {
-  //     const { error } = await supabase.auth.signInWithOtp({
-  //       email: values.email,
-  //     });
+  const mutation = useRegisterPractitioner();
 
   //     if (error) {
   //       throw new Error(error.message);
@@ -64,19 +63,19 @@ const PractitionerRegisterForm = () => {
       phone: "",
       medicalSpeciality: "",
       medicalLicenseNumber: "",
+      password: "",
+      confirmPassword: "",
     },
   });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log("values", values);
-    // await mutation.mutateAsync(values);
-    // if (mutation.error) {
-    //   toast.error(mutation.error.message);
-    //   return;
-    // }
-    // openModal(ModalType.OTP, {
-    //   email: values.email,
-    // });
+    mutation.mutate(values);
+    if (mutation.error) {
+      toast.error(mutation.error.message);
+      return;
+    }
+    toast.success("Votre compte a bien été créé. ");
+    router.push("/practitioner/tableaau-de-bord");
   }
 
   return (
@@ -96,7 +95,7 @@ const PractitionerRegisterForm = () => {
               <FormField
                 control={form.control}
                 name="firstName"
-                // disabled={mutation.isPending}
+                disabled={mutation.isPending}
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Prénom</FormLabel>
@@ -110,7 +109,7 @@ const PractitionerRegisterForm = () => {
               <FormField
                 control={form.control}
                 name="lastName"
-                // disabled={mutation.isPending}
+                disabled={mutation.isPending}
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Nom</FormLabel>
@@ -125,7 +124,7 @@ const PractitionerRegisterForm = () => {
             <FormField
               control={form.control}
               name="email"
-              // disabled={mutation.isPending}
+              disabled={mutation.isPending}
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Adresse email</FormLabel>
@@ -143,7 +142,7 @@ const PractitionerRegisterForm = () => {
             <FormField
               control={form.control}
               name="phone"
-              // disabled={mutation.isPending}
+              disabled={mutation.isPending}
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Numéro de téléphone</FormLabel>
@@ -157,14 +156,13 @@ const PractitionerRegisterForm = () => {
             <FormField
               control={form.control}
               name="medicalSpeciality"
-              // disabled={mutation.isPending}
+              disabled={mutation.isPending}
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Spécialité</FormLabel>
                   <FormControl>
                     <Select
                       onValueChange={field.onChange}
-                      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
                       defaultValue={field.value}
                     >
                       <SelectTrigger className="w-full">
@@ -186,7 +184,7 @@ const PractitionerRegisterForm = () => {
             <FormField
               control={form.control}
               name="medicalLicenseNumber"
-              // disabled={mutation.isPending}
+              disabled={mutation.isPending}
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Numéro de licence médicale</FormLabel>
@@ -197,8 +195,37 @@ const PractitionerRegisterForm = () => {
                 </FormItem>
               )}
             />
+            <FormField
+              control={form.control}
+              name="password"
+              disabled={mutation.isPending}
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Mot de passe</FormLabel>
+                  <FormControl>
+                    <Input placeholder="********" type="password" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="confirmPassword"
+              disabled={mutation.isPending}
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Confirmation mot de passe</FormLabel>
+                  <FormControl>
+                    <Input placeholder="********" type="password" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
             <Button
-              // isLoading={mutation.isPending}
+              isLoading={mutation.isPending}
               type="submit"
               className="w-full"
             >
