@@ -23,7 +23,7 @@ export const user = pgTable("user", {
     .$defaultFn(() => false)
     .notNull(),
   image: text("image"),
-  role: userRoleEnum().notNull(),
+  role: userRoleEnum().notNull().default("PATIENT"),
   createdAt: timestamp("created_at")
     .$defaultFn(() => /* @__PURE__ */ new Date())
     .notNull(),

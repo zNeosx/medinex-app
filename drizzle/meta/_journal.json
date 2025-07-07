@@ -36,6 +36,13 @@
       "when": 1751883576404,
       "tag": "0004_equal_frog_thor",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1751885192501,
+      "tag": "0005_keen_sentinel",
+      "breakpoints": true
     }
   ]
 }
