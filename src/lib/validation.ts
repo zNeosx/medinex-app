@@ -28,3 +28,8 @@ export const practitionerRegisterSchema = z
     path: ["confirmPassword"],
     message: "Les mots de passe ne correspondent pas",
   });
+
+export const practitionerLoginSchema = z.object({
+  email: z.string().email("Veuillez entrer une adresse email valide"),
+  password: z.string().min(1, "Veuillez entrer votre mot de passe"),
+});

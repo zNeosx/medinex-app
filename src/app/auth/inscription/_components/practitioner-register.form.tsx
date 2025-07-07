@@ -75,7 +75,7 @@ const PractitionerRegisterForm = () => {
       return;
     }
     toast.success("Votre compte a bien été créé. ");
-    router.push("/practitioner/tableaau-de-bord");
+    router.push("/practitioner/tableau-de-bord");
   }
 
   return (

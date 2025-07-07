@@ -6,8 +6,17 @@ import React from "react";
 type Props = {
   variant?: "default" | "short";
   direction?: "horizontal" | "vertical";
+  logoSize?: number;
+  iconClassName?: string;
+  textClassName?: string;
 };
-const Logo = ({ variant = "default", direction = "horizontal" }: Props) => {
+const Logo = ({
+  variant = "default",
+  direction = "horizontal",
+  logoSize = 16,
+  iconClassName,
+  textClassName = "text-xl",
+}: Props) => {
   return (
     <Link
       href={"/"}
@@ -18,11 +27,16 @@ const Logo = ({ variant = "default", direction = "horizontal" }: Props) => {
           : "flex-col items-center",
       )}
     >
-      <div className="bg-primary size-fit rounded-lg p-4 text-white">
-        <HeartHandshake size={32} />
+      <div
+        className={cn(
+          "bg-primary size-fit rounded-lg p-2 text-white",
+          iconClassName,
+        )}
+      >
+        <HeartHandshake size={logoSize} />
       </div>
       {variant === "default" ? (
-        <h1 className="text-3xl font-bold">Medinex</h1>
+        <h1 className={cn("font-bold", textClassName)}>Medinex</h1>
       ) : null}
     </Link>
   );
