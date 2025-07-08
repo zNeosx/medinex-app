@@ -135,3 +135,77 @@ export const practitionerSpecialtiesRelations = relations(
     }),
   }),
 );
+
+export const patient = pgTable("patient", {
+  id: text("id").primaryKey(),
+  userId: text("user_id")
+    .references(() => user.id, { onDelete: "cascade" })
+    .unique(),
+  firstName: text("first_name").notNull(),
+  lastName: text("last_name").notNull(),
+  dateOfBirth: timestamp("date_of_birth").notNull(),
+  gender: text("gender").notNull(),
+  phone: text("phone").notNull(),
+  address: text("address"),
+  city: text("city"),
+  postalCode: text("postal_code"),
+  emergencyContact: text("emergency_contact"),
+  emergencyPhone: text("emergency_phone"),
+  bloodType: text("blood_type"),
+  insuranceProvider: text("insurance_provider"),
+  hasAccount: boolean("has_account").default(true).notNull(),
+  createdAt: timestamp("created_at")
+    .$defaultFn(() => new Date())
+    .notNull(),
+  updatedAt: timestamp("updated_at")
+    .$defaultFn(() => new Date())
+    .notNull(),
+});
+
+export const patientRelations = relations(patient, ({ many }) => ({
+  allergies: many(allergy),
+  medicalConditions: many(medicalCondition),
+}));
+
+export const allergy = pgTable("allergy", {
+  id: text("id").primaryKey(),
+  patientId: text("patient_id")
+    .notNull()
+    .references(() => patient.id, { onDelete: "cascade" }),
+  allergen: text("allergen").notNull(),
+  severity: text("severity").notNull(),
+  createdAt: timestamp("created_at")
+    .$defaultFn(() => new Date())
+    .notNull(),
+});
+
+export const allergyRelations = relations(allergy, ({ one }) => ({
+  patient: one(patient, {
+    fields: [allergy.patientId],
+    references: [patient.id],
+  }),
+}));
+
+export const medicalCondition = pgTable("medical_condition", {
+  id: text("id").primaryKey(),
+  patientId: text("patient_id")
+    .notNull()
+    .references(() => patient.id, { onDelete: "cascade" }),
+  conditionName: text("condition_name").notNull(),
+  diagnosisDate: timestamp("diagnosis_date").notNull(),
+  status: text("status").notNull(),
+  notes: text("notes"),
+  createdAt: timestamp("created_at")
+    .$defaultFn(() => new Date())
+    .notNull(),
+});
+
+export const medicalConditionRelations = relations(
+  medicalCondition,
+  ({ one }) => ({
+    patient: one(patient, {
+      fields: [medicalCondition.patientId],
+      references: [patient.id],
+    }),
+  }),
+);

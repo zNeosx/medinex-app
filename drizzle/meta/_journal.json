@@ -43,6 +43,13 @@
       "when": 1751885192501,
       "tag": "0005_keen_sentinel",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1751965845935,
+      "tag": "0006_ambiguous_cannonball",
+      "breakpoints": true
     }
   ]
 }
