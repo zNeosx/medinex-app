@@ -69,13 +69,14 @@ const PractitionerRegisterForm = () => {
   });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    mutation.mutate(values);
-    if (mutation.error) {
-      toast.error(mutation.error.message);
-      return;
+    try {
+      await mutation.mutateAsync(values);
+      toast.success("Votre compte a bien été créé.");
+      router.push("/practitioner/tableau-de-bord");
+    } catch (error) {
+      console.error("Erreur d'inscription :", error);
+      toast.error((error as Error).message);
     }
-    toast.success("Votre compte a bien été créé. ");
-    router.push("/practitioner/tableau-de-bord");
   }
 
   return (

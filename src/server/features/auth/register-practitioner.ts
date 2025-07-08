@@ -15,11 +15,14 @@ export const useRegisterPractitioner = () =>
 
       const data = await response.json();
 
+      console.log("response", response);
+
       if (!response.ok) {
-        throw new Error("Une erreur est survenue");
+        throw new Error(data?.error?.message ?? "Une erreur est survenue");
         // throw new Error(data.error?.message || 'Une erreur est survenue');
       }
 
+      console.log("data", data);
       return data;
     },
   });
