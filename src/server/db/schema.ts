@@ -7,12 +7,36 @@ import {
   text,
   timestamp,
 } from "drizzle-orm/pg-core";
-import { createSelectSchema } from "drizzle-zod";
+import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 
 export const userRoleEnum = pgEnum("user_role_enum", [
   "ADMIN",
   "PRACTITIONER",
   "PATIENT",
+]);
+
+export const genderEnum = pgEnum("gender_enum", [
+  "male",
+  "female",
+  "other",
+  "unknown",
+]);
+
+export const severityEnum = pgEnum("severity_enum", [
+  "mild",
+  "moderate",
+  "severe",
+]);
+
+export const bloodTypeEnum = pgEnum("blood_type_enum", [
+  "A+",
+  "A-",
+  "B+",
+  "B-",
+  "AB+",
+  "AB-",
+  "O+",
+  "O-",
 ]);
 
 export const user = pgTable("user", {
@@ -144,14 +168,14 @@ export const patient = pgTable("patient", {
   firstName: text("first_name").notNull(),
   lastName: text("last_name").notNull(),
   dateOfBirth: timestamp("date_of_birth").notNull(),
-  gender: text("gender").notNull(),
+  gender: genderEnum().notNull(),
   phone: text("phone").notNull(),
   address: text("address"),
   city: text("city"),
   postalCode: text("postal_code"),
   emergencyContact: text("emergency_contact"),
   emergencyPhone: text("emergency_phone"),
-  bloodType: text("blood_type"),
+  bloodType: bloodTypeEnum("blood_type"),
   insuranceProvider: text("insurance_provider"),
   hasAccount: boolean("has_account").default(true).notNull(),
   createdAt: timestamp("created_at")
@@ -161,6 +185,8 @@ export const patient = pgTable("patient", {
     .$defaultFn(() => new Date())
     .notNull(),
 });
+
+export const patientInsertSchema = createInsertSchema(patient);
 
 export const patientRelations = relations(patient, ({ many }) => ({
   allergies: many(allergy),
@@ -173,7 +199,7 @@ export const allergy = pgTable("allergy", {
     .notNull()
     .references(() => patient.id, { onDelete: "cascade" }),
   allergen: text("allergen").notNull(),
-  severity: text("severity").notNull(),
+  severity: severityEnum().notNull(),
   createdAt: timestamp("created_at")
     .$defaultFn(() => new Date())
     .notNull(),

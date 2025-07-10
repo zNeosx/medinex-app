@@ -50,6 +50,20 @@
       "when": 1751965845935,
       "tag": "0006_ambiguous_cannonball",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1751968065176,
+      "tag": "0007_heavy_silk_fever",
+      "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1751973196238,
+      "tag": "0008_clean_catseye",
+      "breakpoints": true
     }
   ]
 }
