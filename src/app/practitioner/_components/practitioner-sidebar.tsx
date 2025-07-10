@@ -14,6 +14,7 @@ import {
   SidebarFooter,
   SidebarGroup,
   SidebarGroupContent,
+  SidebarGroupLabel,
   SidebarHeader,
   SidebarMenu,
   SidebarMenuButton,
@@ -26,6 +27,7 @@ import { useQuery } from "@tanstack/react-query";
 import {
   Calendar,
   CalendarCheck,
+  ChevronRight,
   LayoutDashboard,
   Settings,
   Users,
@@ -35,11 +37,17 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible";
 
 type MenuItem = {
   title: string;
   url: string;
   icon: LucideIcon;
+  items?: Array<Pick<MenuItem, "title" | "url">>;
 };
 
 const data: {
@@ -60,6 +68,16 @@ const data: {
       title: "Patients",
       url: "/practitioner/patients",
       icon: Users,
+      items: [
+        {
+          title: "Liste des patients",
+          url: "/practitioner/patients",
+        },
+        {
+          title: "Ajouter un patient",
+          url: "/practitioner/patients/nouveau",
+        },
+      ],
     },
     {
       title: "Planifier",
@@ -103,7 +121,7 @@ export function PractitionerSidebar({
         <SidebarGroup className="p-4">
           <SidebarGroupContent>
             <SidebarMenu className="gap-3">
-              {data.navLinks.map((item) => (
+              {/* {data.navLinks.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton
                     asChild
@@ -122,7 +140,82 @@ export function PractitionerSidebar({
                     </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
-              ))}
+              ))} */}
+              {data.navLinks.map((item) => {
+                if (!item.items) {
+                  return (
+                    <SidebarMenuItem key={item.title}>
+                      <SidebarMenuButton
+                        asChild
+                        className="px-3 py-2"
+                        isActive={item.url === pathname}
+                      >
+                        <Link
+                          href={item.url}
+                          onClick={() => {
+                            setOpenMobile(false);
+                          }}
+                          className="gap-3"
+                        >
+                          <item.icon size={16} />
+                          <span className="text-sm font-medium">
+                            {item.title}
+                          </span>
+                        </Link>
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                  );
+                }
+
+                return (
+                  <Collapsible
+                    key={item.title}
+                    title={item.title}
+                    defaultOpen
+                    className="group/collapsible"
+                  >
+                    <SidebarGroup className="p-0">
+                      <SidebarGroupLabel
+                        asChild
+                        className="group/label text-sidebar-foreground hover:text-sidebar-accent-foreground px-3 py-2 text-sm"
+                      >
+                        <CollapsibleTrigger>
+                          <item.icon size={16} className="mr-3" />
+                          <span>{item.title}</span>{" "}
+                          <ChevronRight className="ml-auto transition-transform group-data-[state=open]/collapsible:rotate-90" />
+                        </CollapsibleTrigger>
+                      </SidebarGroupLabel>
+                      <CollapsibleContent>
+                        <SidebarGroupContent>
+                          <SidebarMenu className="mt-3">
+                            {item.items.map((item) => (
+                              <SidebarMenuItem key={item.title}>
+                                <SidebarMenuButton
+                                  asChild
+                                  className="px-3 py-2"
+                                  isActive={item.url === pathname}
+                                >
+                                  <Link
+                                    href={item.url}
+                                    onClick={() => {
+                                      setOpenMobile(false);
+                                    }}
+                                    className="gap-3"
+                                  >
+                                    <span className="text-sm font-medium">
+                                      {item.title}
+                                    </span>
+                                  </Link>
+                                </SidebarMenuButton>
+                              </SidebarMenuItem>
+                            ))}
+                          </SidebarMenu>
+                        </SidebarGroupContent>
+                      </CollapsibleContent>
+                    </SidebarGroup>
+                  </Collapsible>
+                );
+              })}
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>

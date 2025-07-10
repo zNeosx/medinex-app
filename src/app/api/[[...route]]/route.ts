@@ -4,6 +4,7 @@ import { Hono } from "hono";
 import { handle } from "hono/vercel";
 import { cors } from "hono/cors";
 import { specialityRouter } from "./routes/speciality.route";
+import { patientRouter } from "./routes/patient.route";
 
 export const runtime = "nodejs";
 
@@ -51,7 +52,8 @@ const routes = app
       message: "Hello Next.js!",
     });
   })
-  .route("/specialities", specialityRouter);
+  .route("/specialities", specialityRouter)
+  .route("/patients", patientRouter);
 
 export const GET = handle(app);
 export const POST = handle(app);
