@@ -39,6 +39,12 @@ export const bloodTypeEnum = pgEnum("blood_type_enum", [
   "O-",
 ]);
 
+export const patientStatusEnum = pgEnum("patient_status_enum", [
+  "pending",
+  "active",
+  "inactive",
+]);
+
 export const user = pgTable("user", {
   id: text("id").primaryKey(),
   name: text("name").notNull(),
@@ -176,6 +182,7 @@ export const patient = pgTable("patient", {
   emergencyContact: text("emergency_contact"),
   emergencyPhone: text("emergency_phone"),
   bloodType: bloodTypeEnum("blood_type"),
+  status: patientStatusEnum("status").default("pending"),
   insuranceProvider: text("insurance_provider"),
   hasAccount: boolean("has_account").default(true).notNull(),
   createdAt: timestamp("created_at")
@@ -185,6 +192,8 @@ export const patient = pgTable("patient", {
     .$defaultFn(() => new Date())
     .notNull(),
 });
+
+export const patientSelectSchema = createSelectSchema(patient);
 
 export const patientInsertSchema = createInsertSchema(patient);
 

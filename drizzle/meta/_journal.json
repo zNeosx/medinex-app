@@ -5,64 +5,8 @@
     {
       "idx": 0,
       "version": "7",
-      "when": 1751541559938,
-      "tag": "0000_empty_shiva",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "7",
-      "when": 1751788483317,
-      "tag": "0001_moaning_vivisector",
-      "breakpoints": true
-    },
-    {
-      "idx": 2,
-      "version": "7",
-      "when": 1751802481683,
-      "tag": "0002_cool_pretty_boy",
-      "breakpoints": true
-    },
-    {
-      "idx": 3,
-      "version": "7",
-      "when": 1751883412096,
-      "tag": "0003_abandoned_old_lace",
-      "breakpoints": true
-    },
-    {
-      "idx": 4,
-      "version": "7",
-      "when": 1751883576404,
-      "tag": "0004_equal_frog_thor",
-      "breakpoints": true
-    },
-    {
-      "idx": 5,
-      "version": "7",
-      "when": 1751885192501,
-      "tag": "0005_keen_sentinel",
-      "breakpoints": true
-    },
-    {
-      "idx": 6,
-      "version": "7",
-      "when": 1751965845935,
-      "tag": "0006_ambiguous_cannonball",
-      "breakpoints": true
-    },
-    {
-      "idx": 7,
-      "version": "7",
-      "when": 1751968065176,
-      "tag": "0007_heavy_silk_fever",
-      "breakpoints": true
-    },
-    {
-      "idx": 8,
-      "version": "7",
-      "when": 1751973196238,
-      "tag": "0008_clean_catseye",
+      "when": 1752484876626,
+      "tag": "0000_old_may_parker",
       "breakpoints": true
     }
   ]

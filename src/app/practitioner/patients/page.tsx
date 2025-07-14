@@ -1,17 +1,28 @@
 import AdminPagesHeader from "@/components/common/page-header";
-import NewPatientBtn from "./_components/new-patient-btn";
-import Link from "next/link";
-import { Plus } from "lucide-react";
 import { buttonVariants } from "@/components/ui/button";
+import { client } from "@/server/api";
+import { Plus } from "lucide-react";
+import Link from "next/link";
+import PatientsStats from "./_components/patients-stats";
+import { toPatientDTO } from "@/server/helper";
+import SearchPatient from "./_components/search-patient";
+import PatientsTable from "./_components/patients-table";
 
-const PractitionerPatientsPage = () => {
+const PractitionerPatientsPage = async () => {
+  const response = await client.api.patients.$get();
+
+  const json = await response.json();
+  if (!response.ok || !json.data) {
+    throw new Error(json.error?.message ?? "Une erreur est survenue");
+  }
+
+  const mappedPatients = json.data.map(toPatientDTO);
   return (
-    <div>
+    <div className="space-y-6">
       <AdminPagesHeader
         title="Patients"
         subtitle={"Gérer les dossiers et les informations des patients"}
       >
-        {/* <NewPatientBtn /> */}
         <Link
           href={"/practitioner/patients/nouveau"}
           className={buttonVariants()}
@@ -20,6 +31,12 @@ const PractitionerPatientsPage = () => {
           <span>Nouveau patient</span>
         </Link>
       </AdminPagesHeader>
+
+      <PatientsStats patients={mappedPatients} />
+
+      <SearchPatient />
+
+      <PatientsTable data={mappedPatients} />
     </div>
   );
 };

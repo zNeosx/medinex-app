@@ -1,14 +1,35 @@
-import { Hono } from "hono";
-import { zValidator } from "@hono/zod-validator";
 import { fullPatientSchema } from "@/lib/validation";
 import { db } from "@/server/db";
-import { patient, allergy, medicalCondition } from "@/server/db/schema";
+import { allergy, medicalCondition, patient } from "@/server/db/schema";
+import { zValidator } from "@hono/zod-validator";
+import { Hono } from "hono";
 import { nanoid } from "nanoid";
 
-export const patientRouter = new Hono().post(
-  "/",
-  zValidator("json", fullPatientSchema),
-  async (c) => {
+export const patientRouter = new Hono()
+  .get("/", async (c) => {
+    try {
+      const patients = await db.query.patient.findMany({
+        orderBy: (patients, { desc }) => [desc(patients.createdAt)],
+      });
+
+      return c.json({
+        data: patients,
+        error: null,
+      });
+    } catch (error) {
+      console.error("Patient request failed:", error);
+      return c.json(
+        {
+          data: null,
+          error: {
+            message: "Erreur lors de la récupération des patients",
+          },
+        },
+        500,
+      );
+    }
+  })
+  .post("/", zValidator("json", fullPatientSchema), async (c) => {
     const body = c.req.valid("json");
 
     try {
@@ -56,5 +77,4 @@ export const patientRouter = new Hono().post(
         500,
       );
     }
-  },
-);
+  });
