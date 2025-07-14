@@ -1,3 +1,6 @@
+import type { badgeVariants } from "@/components/ui/badge";
+import type { PatientStatus } from "@/types/enums";
+import type { VariantProps } from "class-variance-authority";
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 
@@ -99,4 +102,29 @@ export function getAge(dateOfBirth: string | Date): number {
   }
 
   return age;
+}
+
+export function getPatientStatusInfo(status: PatientStatus): {
+  translatedStatus: string;
+  badgeVariant: VariantProps<typeof badgeVariants>["variant"];
+} {
+  switch (status) {
+    case "pending":
+      return {
+        translatedStatus: "En attente",
+        badgeVariant: "pending",
+      };
+    case "active":
+      return {
+        translatedStatus: "Actif",
+        badgeVariant: "default",
+      };
+    case "inactive":
+      return {
+        translatedStatus: "Inactif",
+        badgeVariant: "destructive",
+      };
+    default:
+      return status;
+  }
 }

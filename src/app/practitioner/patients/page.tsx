@@ -1,13 +1,11 @@
 import AdminPagesHeader from "@/components/common/page-header";
 import { buttonVariants } from "@/components/ui/button";
 import { client } from "@/server/api";
+import { toPatientDTO } from "@/server/helper";
 import { Plus } from "lucide-react";
 import Link from "next/link";
 import PatientsStats from "./_components/patients-stats";
-import { toPatientDTO } from "@/server/helper";
-import SearchPatient from "./_components/search-patient";
 import PatientsTable from "./_components/patients-table";
-
 const PractitionerPatientsPage = async () => {
   const response = await client.api.patients.$get();
 
@@ -33,8 +31,6 @@ const PractitionerPatientsPage = async () => {
       </AdminPagesHeader>
 
       <PatientsStats patients={mappedPatients} />
-
-      <SearchPatient />
 
       <PatientsTable data={mappedPatients} />
     </div>

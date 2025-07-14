@@ -85,7 +85,7 @@ const NewPatientForm = () => {
     console.log(values);
     try {
       await mutation.mutateAsync(values);
-      toast.success("Votre compte a bien été créé.");
+      toast.success("Le nouveau patient a bien été ajouté.");
       router.push("/practitioner/patients");
     } catch (error) {
       console.error("Erreur de la création d'un patient :", error);
