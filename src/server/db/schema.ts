@@ -1,6 +1,7 @@
 import { relations } from "drizzle-orm";
 import {
   boolean,
+  integer,
   pgEnum,
   pgTable,
   primaryKey,
@@ -43,6 +44,12 @@ export const patientStatusEnum = pgEnum("patient_status_enum", [
   "pending",
   "active",
   "inactive",
+]);
+
+export const appointmentStatusEnum = pgEnum("appointment_status", [
+  "scheduled",
+  "cancelled",
+  "pending",
 ]);
 
 export const user = pgTable("user", {
@@ -136,6 +143,7 @@ export const practitioner = pgTable("practitioner", {
 
 export const practitionerRelations = relations(practitioner, ({ many }) => ({
   practitionerSpecialties: many(practitionerSpecialties),
+  appointments: many(appointment),
 }));
 
 // PractitionerSpecialties join table (for many-to-many relation)
@@ -200,6 +208,7 @@ export const patientInsertSchema = createInsertSchema(patient);
 export const patientRelations = relations(patient, ({ many }) => ({
   allergies: many(allergy),
   medicalConditions: many(medicalCondition),
+  appointments: many(appointment),
 }));
 
 export const allergy = pgTable("allergy", {
@@ -244,3 +253,46 @@ export const medicalConditionRelations = relations(
     }),
   }),
 );
+
+export const appointment = pgTable("appointment", {
+  id: text("id").primaryKey(),
+  patientId: text("patient_id")
+    .references(() => patient.id, { onDelete: "cascade" })
+    .notNull(),
+  practitionerId: text("practitioner_id").notNull(),
+  date: timestamp("date").notNull(),
+  durationMinutes: integer("duration_minutes").default(30).notNull(),
+  appointmentTypeId: text("appointment_type_id")
+    .references(() => appointmentType.id)
+    .notNull(),
+  status: appointmentStatusEnum("status").default("pending").notNull(),
+  reason: text("reason"),
+  notes: text("notes"),
+  createdAt: timestamp("created_at")
+    .$defaultFn(() => new Date())
+    .notNull(),
+  updatedAt: timestamp("updated_at")
+    .$defaultFn(() => new Date())
+    .notNull(),
+});
+
+export const appointmentRelations = relations(appointment, ({ one }) => ({
+  patient: one(patient, {
+    fields: [appointment.patientId],
+    references: [patient.id],
+  }),
+  practitioner: one(practitioner, {
+    fields: [appointment.practitionerId],
+    references: [practitioner.id],
+  }),
+  appointmentType: one(appointmentType, {
+    fields: [appointment.appointmentTypeId],
+    references: [appointmentType.id],
+  }),
+}));
+
+export const appointmentType = pgTable("appointment_type", {
+  id: text("id").primaryKey(),
+  label: text("label").notNull(),
+  isActive: boolean("is_active").default(true),
+});
