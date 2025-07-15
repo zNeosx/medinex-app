@@ -7,13 +7,9 @@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { getAge, getPatientStatusInfo } from "@/lib/utils";
-import type { Patient } from "@/types/patient";
+import type { PatientWithEmail } from "@/types/patient";
 import type { ColumnDef, FilterFn } from "@tanstack/react-table";
 import { Eye, Mail, Phone } from "lucide-react";
-
-type PatientWithEmail = Patient & {
-  email?: string;
-};
 
 const multiColumnFilterFn: FilterFn<PatientWithEmail> = (
   row,
@@ -38,7 +34,9 @@ const statusFilterFn: FilterFn<PatientWithEmail> = (
   return filterValue.includes(status);
 };
 
-export const patientColumns: ColumnDef<PatientWithEmail>[] = [
+export const getPatientColumns = (
+  onViewDetails: (patient: PatientWithEmail) => void,
+): ColumnDef<PatientWithEmail>[] => [
   {
     accessorKey: "patient",
     enableColumnFilter: true,
@@ -95,7 +93,7 @@ export const patientColumns: ColumnDef<PatientWithEmail>[] = [
   {
     accessorKey: "lastVisit",
     header: "Dernière visite",
-    cell: ({ row }) => {
+    cell: () => {
       return <div className="font-medium">N/A</div>;
     },
   },
@@ -120,7 +118,10 @@ export const patientColumns: ColumnDef<PatientWithEmail>[] = [
     cell: ({ row }) => {
       return (
         <div className="font-medium">
-          <Button variant={"outline"}>
+          <Button
+            variant={"outline"}
+            onClick={() => onViewDetails(row.original)}
+          >
             <Eye /> <span className="sr-only">Voir détails</span>
           </Button>
         </div>

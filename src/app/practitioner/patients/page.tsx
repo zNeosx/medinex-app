@@ -15,6 +15,7 @@ const PractitionerPatientsPage = async () => {
   }
 
   const mappedPatients = json.data.map(toPatientDTO);
+
   return (
     <div className="space-y-6">
       <AdminPagesHeader

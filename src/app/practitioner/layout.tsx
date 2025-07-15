@@ -19,7 +19,7 @@ export default function PractitionerLayout({
 
           <ModeToggle />
         </header>
-        <div className="p-6">{children}</div>
+        <div className="p-8">{children}</div>
       </SidebarInset>
     </SidebarProvider>
   );

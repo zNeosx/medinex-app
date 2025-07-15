@@ -4,6 +4,7 @@ import { create } from "zustand";
 export enum ModalType {
   NULL = "null",
   NEW_PATIENT = "new_patient",
+  PATIENT_RECORD_DETAILS = "patient_record_details",
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

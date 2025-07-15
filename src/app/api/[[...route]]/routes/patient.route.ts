@@ -9,6 +9,10 @@ export const patientRouter = new Hono()
   .get("/", async (c) => {
     try {
       const patients = await db.query.patient.findMany({
+        with: {
+          allergies: true,
+          medicalConditions: true,
+        },
         orderBy: (patients, { desc }) => [desc(patients.createdAt)],
       });
 

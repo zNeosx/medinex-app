@@ -1,5 +1,6 @@
 import { useModalStore } from "@/stores/modal.store";
 import NewPatientModal from "./new-patient.modal";
+import PatientRecordDetailsModal from "./patient-record-detail.modal";
 
 export default function ModalRoot() {
   const { currentModal } = useModalStore();
@@ -9,6 +10,7 @@ export default function ModalRoot() {
   return (
     <>
       <NewPatientModal />
+      <PatientRecordDetailsModal />
     </>
   );
 }

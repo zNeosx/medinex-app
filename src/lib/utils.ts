@@ -1,4 +1,5 @@
 import type { badgeVariants } from "@/components/ui/badge";
+import type { Allergy } from "@/types/allergy";
 import type { PatientStatus } from "@/types/enums";
 import type { VariantProps } from "class-variance-authority";
 import { clsx, type ClassValue } from "clsx";
@@ -104,7 +105,7 @@ export function getAge(dateOfBirth: string | Date): number {
   return age;
 }
 
-export function getPatientStatusInfo(status: PatientStatus): {
+export function getPatientStatusInfo(status: PatientStatus | null): {
   translatedStatus: string;
   badgeVariant: VariantProps<typeof badgeVariants>["variant"];
 } {
@@ -112,7 +113,7 @@ export function getPatientStatusInfo(status: PatientStatus): {
     case "pending":
       return {
         translatedStatus: "En attente",
-        badgeVariant: "pending",
+        badgeVariant: "yellow",
       };
     case "active":
       return {
@@ -125,6 +126,32 @@ export function getPatientStatusInfo(status: PatientStatus): {
         badgeVariant: "destructive",
       };
     default:
-      return status;
+      return {
+        translatedStatus: "Non défini",
+        badgeVariant: "secondary",
+      };
+  }
+}
+
+export function getPatientAlleryInfo(allergy: Allergy): {
+  badgeVariant: VariantProps<typeof badgeVariants>["variant"];
+} {
+  switch (allergy.severity) {
+    case "mild":
+      return {
+        badgeVariant: "yellow",
+      };
+    case "moderate":
+      return {
+        badgeVariant: "orange",
+      };
+    case "severe":
+      return {
+        badgeVariant: "destructive",
+      };
+    default:
+      return {
+        badgeVariant: "secondary",
+      };
   }
 }
